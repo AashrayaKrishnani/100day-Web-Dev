@@ -36,7 +36,11 @@ input:focus-visible{
     background-color: rgba(240, 238, 116, 0.836);
 }
 
-span {
+input.warning:focus{
+  border-color: rgb(230, 71, 71);
+}
+
+span.warning {
   color: red;
 }
 
