@@ -31,9 +31,9 @@ input {
 }
 
 input:focus-visible{
-    border: 2px solid rgb(122, 118, 118);
+    border: 2px solid rgb(180, 175, 175);
     outline: none;
-    background-color: rgb(245, 245, 245);
+    background-color: rgba(240, 238, 116, 0.836);
 }
 
 span {
