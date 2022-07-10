@@ -1,5 +1,6 @@
 let editPlayer = 0; // editPlayer is either 1 or 2, corresponding to players numbers.
 let activePlayer = 0; // Active player can be 0 or 1, -> index for players array
+let gameIsOver = false;
 
 const players = [
   {
@@ -23,7 +24,7 @@ const formErrorElement = document.getElementById("config-errors");
 const activeGameElement = document.getElementById("active-game");
 const activePlayerNameElement = document.getElementById("active-player-name");
 const gameOverArticleElement = document.getElementById('game-over');
-const winnerNameArticleElement = document.getElementById('winner-name');
+const winnerNameSpanElement = document.getElementById('winner-name');
 
 const editP1BtnElement = document.getElementById("edit-p1-name-btn");
 const editP2BtnElement = document.getElementById("edit-p2-name-btn");

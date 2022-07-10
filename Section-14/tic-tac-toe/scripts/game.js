@@ -1,8 +1,8 @@
 function startNewGame() {
-  //   if (!players[0].name || !players[1].name) {
-  //     alert("Please Set Player Names for Both Players");
-  //     return;
-  //   }
+    if (!players[0].name || !players[1].name) {
+      alert("Please Set Player Names for Both Players");
+      return;
+    }
     
   // Reset Board.
   for(const gameBoardElement of gameBoardElements){
@@ -19,6 +19,10 @@ function startNewGame() {
     }
   }
 
+  gameIsOver = false;
+  winnerNameSpanElement.textContent = '';
+  winnerNameSpanElement.parentElement.childNodes[0].textContent = 'You Won, ';
+  winnerNameSpanElement.parentElement.childNodes[2].textContent = '!';
   activePlayerNameElement.parentElement.style.display = "block";
   activePlayerNameElement.textContent = players[activePlayer].name;
   activeGameElement.style.display = "block";
@@ -94,15 +98,17 @@ function _getWinner() {
 function _showWinnerEndGame(winner) {
   gameOverArticleElement.style.display = "block";
   if (winner == 0) {
-    winnerNameArticleElement.textContent = "Oh! It's a Draw! ^^";
+    winnerNameSpanElement.text = '';
+    winnerNameSpanElement.parentElement.childNodes[0].textContent ="Oh, It's a Draw! ^^"
+    winnerNameSpanElement.parentElement.childNodes[2].textContent =""
   } else {
-    winnerNameArticleElement.textContent = players[winner - 1].name;
+    winnerNameSpanElement.textContent = players[winner - 1].name;
   }
   activePlayerNameElement.parentElement.style.display = "none";
 }
 
 function selectGameField(event) {
-  if (event.target.classList.contains("disabled")) {
+  if (event.target.classList.contains("disabled") || gameIsOver) {
     return;
   }
   event.target.textContent = players[activePlayer].symbol;
@@ -113,11 +119,7 @@ function selectGameField(event) {
   let winner = _getWinner();
   if (winner != -1) {
     _showWinnerEndGame(winner);
-    for (const listElement of gameBoardElements) {
-      if (!listElement.classList.contains("disabled")) {
-        listElement.classList.add("disabled");
-      }
-    }
+    gameIsOver = true;
     return;
   }
 
