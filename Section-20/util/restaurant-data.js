@@ -11,7 +11,11 @@ const restaurantsFilePath = path.join(
 function getRestaurants() {
   const fileData = fs.readFileSync(restaurantsFilePath);
   const restaurants = JSON.parse(fileData);
-  return restaurants;
+
+  // Returning Restaurants Sorted by Name ;)
+  return restaurants.sort(function (resA, resB) {
+    return resA.name > resB.name ? 1 : -1;
+  });
 }
 
 function getRestaurantById(id) {

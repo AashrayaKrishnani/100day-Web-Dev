@@ -20,6 +20,10 @@
       <p>Find your next favorite restaurants with help of our other users!</p>
       <!-- EJS PlaceHolder below ^^ -->
       <p>We found <%= restaurants.length %> restaurants.</p>
+      <form action="/restaurants" method="get">
+        <input type="hidden" name="order" value="<%= otherOrder %>" />
+        <button class="btn">Change Order</button>
+      </form>
       <ul id="restaurants-list">
         <% for(const restaurant of restaurants){ %>
 
