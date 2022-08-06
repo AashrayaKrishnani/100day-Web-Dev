@@ -7,24 +7,7 @@
 
   <body>
     <%- include('includes/header') %>
-    <main id="post-detail">
-      <h1><%= post.title%></h1>
-      <section id="post-meta">
-        <address>
-          <a href="mailto:<%= post.email%>"><%= post.author %></a>
-        </address>
-        <time datetime="<%= post.date%>">
-          <!--  -->
-          <%= post.humanReadableDate%>
-        </time>
-      </section>
-
-      <hr />
-      <section>
-        <p><strong>Summary:</strong> <%= post.summary%></p>
-        <hr class="light" />
-        <p id="body"><%= post.body%></p>
-      </section>
-    </main>
+    <!--  -->
+    <%- include('includes/post-detail', {post: post, showSecondHr: true}) %>
   </body>
 </html>

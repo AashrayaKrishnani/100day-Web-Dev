@@ -11,7 +11,11 @@ router.get("/", function (req, res) {
 });
 
 router.get("/posts", async function (req, res) {
-  const posts = await mongo.getDb().collection("posts").find().toArray();
+  const posts = await mongo
+    .getDb()
+    .collection("posts")
+    .find({}, { title: 1, author: 1, summary: 1 })
+    .toArray();
 
   res.render("posts-list", { posts: posts });
 });
@@ -51,18 +55,21 @@ router.post("/new-post", async function (req, res) {
 });
 
 router.get("/post-details/:id", async function (req, res) {
-  const id = req.params.id;
+  let id;
 
-  const [result, _] = await db.query(
-    "SELECT posts.*, authors.name AS author, authors.email AS email FROM posts JOIN authors ON posts.author_id = authors.id WHERE posts.id = ?",
-    [id]
-  );
+  try {
+    id = ObjectId(req.params.id);
+  } catch (error) {
+    return res.status(404).render("404");
+  }
+  const result = await mongo.getDb().collection("posts").findOne({ _id: id });
 
-  if (!result || result.length == 0) {
+  if (!result || result == undefined || result == null) {
     return res.status(404).render("404");
   }
 
-  const post = result[0];
+  const post = result;
+  post.date = new Date(post.date);
 
   post.humanReadableDate = post.date.toLocaleString("en-US", {
     hour: "numeric",
@@ -77,97 +84,111 @@ router.get("/post-details/:id", async function (req, res) {
 });
 
 router.get("/update-post/:id", async function (req, res) {
-  const id = req.params.id;
+  let id;
 
-  const [posts, _] = await db.query(
-    "SELECT posts.*, authors.name AS author FROM posts JOIN authors ON posts.author_id = authors.id WHERE posts.id = ?",
-    [id]
-  );
-
-  if (!posts || posts == undefined || posts == null || posts.length == 0) {
+  try {
+    id = ObjectId(req.params.id);
+  } catch (error) {
     return res.status(404).render("404");
   }
 
-  const author_id = posts[0].author_id;
+  const post = await mongo.getDb().collection("posts").findOne({ _id: id });
+
+  if (!post || post == undefined || post == null) {
+    return res.status(404).render("404");
+  }
+
+  const author_id = post.author._id;
 
   if (author_id != req.query.author_id) {
     return res.status(701).render("701");
   }
 
-  res.render("update-post", { post: posts[0] });
+  res.render("update-post", { post: post });
 });
 
 router.post("/update-post/:id", async function (req, res) {
-  const id = req.params.id;
+  let id;
 
-  const [posts, _] = await db.query(
-    "SELECT author_id FROM posts JOIN authors ON posts.author_id = authors.id WHERE posts.id = ?",
-    [id]
-  );
-
-  if (!posts || posts == undefined || posts == null || posts.length == 0) {
+  try {
+    id = ObjectId(req.params.id);
+  } catch (error) {
     return res.status(404).render("404");
   }
 
-  const author_id = posts[0].author_id;
+  const queryResult = await mongo
+    .getDb()
+    .collection("posts")
+    .findOne({ _id: id }, { "author._id": 1 });
+  const post = req.body;
 
-  if (author_id != req.body.author_id) {
+  if (!queryResult) {
+    return res.status(404).render("404");
+  }
+
+  if (queryResult.author._id != req.body.author_id) {
     return res.status(701).render("701");
   }
 
-  const post = req.body;
-
-  await db.execute(
-    "UPDATE posts SET title=?, summary=?, body=?, date =CURRENT_TIMESTAMP WHERE id=?;",
-    [post.title, post.summary, post.content, id]
-  );
+  await mongo
+    .getDb()
+    .collection("posts")
+    .updateOne(
+      { _id: id },
+      { $set: { title: post.title, summary: post.summary, body: post.content } }
+    );
 
   res.redirect("/posts");
 });
 
 router.get("/delete-post/:id", async function (req, res) {
-  const id = req.params.id;
+  let id;
 
-  const [posts, _] = await db.query(
-    "SELECT posts.*, authors.name AS author, authors.email AS email FROM posts JOIN authors ON posts.author_id = authors.id WHERE posts.id = ?",
-    [id]
-  );
-
-  if (!posts || posts == undefined || posts == null || posts.length == 0) {
+  try {
+    id = ObjectId(req.params.id);
+  } catch (error) {
     return res.status(404).render("404");
   }
 
-  const author_id = posts[0].author_id;
+  const post = await mongo.getDb().collection("posts").findOne({ _id: id });
+
+  if (!post || post == undefined || post == null) {
+    return res.status(404).render("404");
+  }
+
+  const author_id = post.author._id;
 
   if (author_id != req.query.author_id) {
     return res.status(701).render("701");
   }
 
-  res.render("delete-post", { post: posts[0] });
+  res.render("delete-post", { post: post });
 });
 
 router.post("/delete-post/:id", async function (req, res) {
-  const id = req.params.id;
+  let id;
 
-  const [posts, _] = await db.query(
-    "SELECT author_id FROM posts JOIN authors ON posts.author_id = authors.id WHERE posts.id = ?",
-    [id]
-  );
-
-  if (!posts || posts == undefined || posts == null || posts.length == 0) {
+  try {
+    id = ObjectId(req.params.id);
+  } catch (error) {
     return res.status(404).render("404");
   }
 
-  const author_id = posts[0].author_id;
+  const queryResult = await mongo
+    .getDb()
+    .collection("posts")
+    .findOne({ _id: id }, { "author._id": 1 });
+  const post = req.body;
 
-  if (author_id != req.body.author_id) {
+  if (!queryResult) {
+    return res.status(404).render("404");
+  }
+
+  if (queryResult.author._id != post.author_id) {
     return res.status(701).render("701");
   }
 
-  const post = req.body;
-
-  await db.execute("DELETE FROM posts WHERE id=?;", [id]);
-
+  await mongo.getDb().collection("posts").deleteOne({ _id: id });
   res.redirect("/posts");
 });
 
@@ -176,10 +197,10 @@ router.get("/add-author", function (req, res) {
 });
 
 router.post("/add-author", async function (req, res) {
-  await db.execute("INSERT INTO authors (name, email) VALUES (?, ?);", [
-    req.body.name,
-    req.body.email.toString().toLowerCase(),
-  ]);
+  await mongo.getDb().collection("authors").insertOne({
+    name: req.body.name,
+    email: req.body.email.toString().toLowerCase(),
+  });
 
   res.redirect("/new-post");
 });
