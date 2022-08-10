@@ -1,0 +1,18 @@
+<h1><%= post.title%></h1>
+<section id="post-meta">
+  <address>
+    <a href="mailto:<%= post.author.email%>"><%= post.author.name %></a>
+  </address>
+  <time datetime="<%= post.date%>"> <%= post.humanReadableDate%> </time>
+</section>
+
+<hr />
+<section>
+  <p><strong>Summary:</strong> <%= post.summary%></p>
+  <% if (showSecondHr) { %>
+
+  <hr class="light" />
+  <% } %>
+
+  <p id="body"><%= post.body%></p>
+</section>
