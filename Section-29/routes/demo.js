@@ -3,6 +3,7 @@ const express = require("express");
 const db = require("../database/database");
 
 const bcrypt = require("bcryptjs");
+const session = require("express-session");
 
 const router = express.Router();
 
@@ -11,11 +12,28 @@ router.get("/", function (req, res) {
 });
 
 router.get("/signup", async function (req, res) {
-  res.render("signup");
-});
+  let sessionInputData = {
+    errorString: "",
+    email: "",
+    "confirm-email": "",
+    password: "",
+  };
 
-router.get("/login", async function (req, res) {
-  res.render("login");
+  if (req.session.inputData) {
+    // Copying values
+    sessionInputData.email = req.session.inputData.email;
+    sessionInputData.password = req.session.inputData.password;
+    sessionInputData["confirm-email"] = req.session.inputData["confirm-email"];
+    sessionInputData.errorString = req.session.inputData.errorString;
+
+    // Setting req.session.inputData back to null :)
+    req.session.inputData = null;
+    return req.session.save(function () {
+      res.render("signup", { inputData: sessionInputData });
+    });
+  }
+
+  res.render("signup", { inputData: sessionInputData });
 });
 
 router.post("/signup", async function (req, res) {
@@ -46,29 +64,62 @@ router.post("/signup", async function (req, res) {
   }
 
   if (errorString) {
-    alert(errorString);
-    res.redirect("/signup");
-    return;
+    // alert(errorString);
+    req.session.inputData = {
+      errorString: errorString,
+      email: userData.email,
+      "confirm-email": userData["confirm-email"],
+      password: userData.password,
+    };
+
+    return req.session.save(function () {
+      res.redirect("/signup");
+    });
   }
 
   // Saving User Info to DB!
-
-  userData.email = userData.email.trim().toLowerCase;
+  userData.email = userData.email.trim().toLowerCase();
   userData.password = userData.password.trim();
 
-  const hashedPass = bcrypt.hash(userData.password);
+  const hashedPass = await bcrypt.hash(userData.password, 12);
 
   await db
     .getDb()
     .collection("users")
     .insertOne({ email: userData.email, password: hashedPass });
 
+  // clearing any
+  req.session.inputData = null;
+
   res.redirect("/login");
+});
+
+router.get("/login", async function (req, res) {
+  let sessionInputData = {
+    errorString: "",
+    email: "",
+    password: "",
+  };
+
+  if (req.session.inputData) {
+    // Copying values
+    sessionInputData.email = req.session.inputData.email;
+    sessionInputData.password = req.session.inputData.password;
+    sessionInputData.errorString = req.session.inputData.errorString;
+
+    // Setting req.session.inputData back to null :)
+    req.session.inputData = null;
+    return req.session.save(function () {
+      res.render("login", { inputData: sessionInputData });
+    });
+  }
+
+  res.render("login", { inputData: sessionInputData });
 });
 
 router.post("/login", async function (req, res) {
   const loginData = req.body;
-  const errorString = "";
+  let errorString = "";
 
   // Little HouseKeeping ;p
   loginData.email = loginData.email.trim().toLowerCase();
@@ -83,7 +134,7 @@ router.post("/login", async function (req, res) {
 
   if (!existingUser) {
     errorString =
-      "Input Email is not registered. Kindly sing-up or recheck the email enterred :)";
+      "Input Email is not registered. Kindly sign-up or recheck the email enterred :)";
   } else {
     // Validating Password.
     const isSamePass = await bcrypt.compare(
@@ -96,8 +147,15 @@ router.post("/login", async function (req, res) {
   }
 
   if (errorString) {
-    alert(errorString);
-    return res.redirect("/login");
+    req.session.inputData = {
+      errorString: errorString,
+      email: loginData.email,
+      password: loginData.password,
+    };
+
+    return req.session.save(function () {
+      res.redirect("/login");
+    });
   }
 
   // Saving User Session :)
@@ -106,14 +164,42 @@ router.post("/login", async function (req, res) {
   req.session.isAuth = true;
 
   req.session.save(function () {
-    res.redirect("/admin");
+    res.redirect("/profile");
   });
 });
 
-router.get("/admin", function (req, res) {
+router.get("/admin", async function (req, res) {
+  if (!req.session.isAuth) {
+    return res.status(401).render("401");
+  }
+
+  // Checking if isAdmin or not.
+  if (!res.locals.isAdmin) {
+    return res.status(403).render("403");
+  }
+
   res.render("admin");
 });
 
-router.post("/logout", function (req, res) {});
+router.get("/profile", function (req, res) {
+  if (!req.session.isAuth) {
+    return res.status(401).render("401");
+  }
+
+  res.render("profile");
+});
+
+router.post("/logout", function (req, res) {
+  if (req.session.user) {
+    req.session.user = null;
+    req.session.isAuth = false;
+    return req.session.save(function () {
+      res.redirect("/");
+    });
+  } else {
+    // alert("You aren't logged in! :)");
+    return res.redirect("/");
+  }
+});
 
 module.exports = router;
