@@ -1,2 +1,4 @@
-Section-29/node_modules
-Section-29/data
+Section-30/*/node_modules
+Section-30/*/data
+Section-30/*/*/node_modules
+Section-30/*/*/data
