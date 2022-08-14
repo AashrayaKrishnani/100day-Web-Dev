@@ -8,6 +8,7 @@ const db = require("./data/database");
 const blogRoutes = require("./routes/blog");
 const authRoutes = require("./routes/auth");
 const authMiddlewares = require("./middlewares/auth");
+const csrfMiddleware = require("./middlewares/csrf");
 
 const app = express();
 
@@ -20,10 +21,12 @@ app.use(express.urlencoded({ extended: false }));
 sessionsConfig.addSessions(app);
 app.use(csrf());
 
+app.use(csrfMiddleware.addCSRFToken);
+
 app.use(authMiddlewares.auth);
 
-app.use(blogRoutes);
 app.use(authRoutes);
+app.use(blogRoutes);
 
 app.use(function (error, req, res, next) {
   console.log(error);
