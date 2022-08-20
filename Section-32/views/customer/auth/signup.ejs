@@ -11,63 +11,70 @@
 
     <main>
       <h1>Create New Account</h1>
-      <form action="/signup" method="post">
-        <p>
-          <label for="email">Email</label>
-          <input type="email" name="email" id="email" required />
-        </p>
-        <p>
-          <label for="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            required
-            minlength="6"
-          />
-        </p>
-        <p>
-          <label for="confirm-password">Confirm Password</label>
-          <input
-            type="password"
-            name="confirm-password"
-            id="confirm-password"
-            required
-            minlength="6"
-          />
-        </p>
-        <p>
-          <label for="first-name">First Name</label>
-          <input type="text" name="first-name" id="first-name" required />
-        </p>
-        <p>
-          <label for="last-name">Last Name</label>
-          <input type="text" name="last-name" id="last-name" required />
-        </p>
-        <p>
-          <label for="house">House No.</label>
-          <input type="text" name="house" id="house" required />
-        </p>
-        <p>
-          <label for="street">Street</label>
-          <input type="text" name="street" id="street" required />
-        </p>
-        <p>
-          <label for="postal">Postal Code</label>
-          <input type="text" name="postal" id="postal" required />
-        </p>
-        <p>
-          <label for="city">City</label>
-          <input type="text" name="city" id="city" required />
-        </p>
-        <p>
-          <label for="country">Country</label>
-          <input type="text" name="country" id="country" required />
-        </p>
-        <button type="submit" class="btn">Create Account</button>
-        <p id="switch-form">
-          <a href="/login">Login Instead</a>
-        </p>
+      <form action="/signup" method="POST">
+        <section>
+          <p>
+            <label for="first-name">First Name</label>
+            <input type="text" name="first-name" id="first-name" required />
+          </p>
+          <p>
+            <label for="last-name">Last Name</label>
+            <input type="text" name="last-name" id="last-name" required />
+          </p>
+          <p>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required />
+          </p>
+          <p>
+            <label for="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              required
+              minlength="6"
+            />
+          </p>
+          <p>
+            <label for="confirm-password">Confirm Password</label>
+            <input
+              type="password"
+              name="confirm-password"
+              id="confirm-password"
+              required
+              minlength="6"
+            />
+          </p>
+        </section>
+        <hr />
+        <section>
+          <p>
+            <label for="house">House No.</label>
+            <input type="text" name="house" id="house" required />
+          </p>
+          <p>
+            <label for="street">Street</label>
+            <input type="text" name="street" id="street" required />
+          </p>
+          <p>
+            <label for="postal">Postal Code</label>
+            <input type="text" name="postal" id="postal" required />
+          </p>
+          <p>
+            <label for="city">City</label>
+            <input type="text" name="city" id="city" required />
+          </p>
+          <p>
+            <label for="country">Country</label>
+            <input type="text" name="country" id="country" required />
+          </p>
+        </section>
+        <div id="actions">
+          <button type="submit" class="btn">Create Account</button>
+          <p id="switch-form">
+            <a href="/login">Login Instead</a>
+          </p>
+        </div>
       </form>
     </main>
   </body>
