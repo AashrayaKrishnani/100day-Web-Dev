@@ -3,8 +3,6 @@
 }
 
 html {
-  font-family: "Montserrat", sans-serif;
-
   --color-gray-50: rgb(219, 236, 209);
   --color-gray-100: rgb(199, 207, 195);
   --color-gray-300: rgb(91, 99, 86);
@@ -33,7 +31,8 @@ html {
   --space-6: 1.5rem;
   --space-8: 2rem;
 
-  --font-weight-light: 400;
+  --font-weight-extra-light: 400;
+  --font-weight-light: 500;
   --font-weight-semi-bold: 600;
   --font-weight-bold: 700;
 
@@ -42,6 +41,9 @@ html {
   --border-radius-large: 8px;
 
   --shadow-medium: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  font-family: "Montserrat", sans-serif;
+  font-weight: var(--font-weight-light);
 }
 
 body {
@@ -86,5 +88,6 @@ a:active {
 
 .btn:hover,
 .btn:active {
+  color: var(--color-primary-500-contrast);
   background-color: var(--color-primary-700);
 }

@@ -1,14 +1,30 @@
+const User = require("../models/user-model");
+
+const validation = require("../utils/validation");
+
 function getSignup(req, res) {
-  res.render("customer/auth/signup");
+  res.render("shared/auth/signup");
 }
 
 async function trySignup(req, res) {
-  //.. to do
+  const validationResult = validation.validateSignupData(req.body);
+
+  if (!validationResult.isValid) {
+    return;
+  }
+
+  const user = new User(req.body);
+
+  if (await user.isExistingInDb()) {
+    return; // User Already Exists
+  }
+
+  await user.signup();
   res.redirect("/login");
 }
 
 function getLogin(req, res) {
-  res.render("customer/auth/login");
+  res.render("shared/auth/login");
 }
 
 module.exports = {

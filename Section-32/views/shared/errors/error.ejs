@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../includes/head' , {title: statusCode}) %>
+  </head>
+
+  <body>
+    <%- include('../includes/header') %>
+
+    <main>
+      <% if (!title) { %>
+        <h1>Oopsies!</h1>       
+      <% } else { %>
+        <h1><%= title %> </h1>
+        <% } %>
+        <p>
+        <%=message%>
+    </p>
+      <p>
+        Please share 
+        <a href="mailto:support@dev.associates.com">here</a>
+        
+         incase it persists. _/\_
+      </p>
+      <p><a class='btn' href="/">Back to Safety!</a></p>
+      <p</p>
+    </main>
+  </body>
+</html>
