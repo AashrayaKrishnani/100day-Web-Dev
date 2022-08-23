@@ -20,8 +20,8 @@ html {
   --color-primary-200-contrast: rgb(100, 46, 2);
   --color-primary-500-contrast: rgb(238, 245, 233);
 
-  --color-error-100: rgb(255, 192, 180);
-  --color-error-500: rgb(199, 51, 15);
+  --color-error-100: rgb(247, 198, 188, 0.84);
+  --color-error-500: rgb(165, 47, 18, 85%);
 
   --color-primary-500-bg: rgb(63, 60, 58);
 

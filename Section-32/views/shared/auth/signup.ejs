@@ -14,18 +14,42 @@
       <form action="/signup" method="POST">
         <input type="hidden" name="_csrf" value="<%=locals.csrfToken%>" />
 
+        <section id="flash-error">
+          <% if (sessionData.message) { %>
+          <p><%=sessionData.message%></p>
+          <% } %>
+        </section>
+
         <section>
           <p>
             <label for="first-name">First Name</label>
-            <input type="text" name="first-name" id="first-name" required />
+            <input
+              value="<%=sessionData['first-name']%>"
+              type="text"
+              name="first-name"
+              id="first-name"
+              required
+            />
           </p>
           <p>
             <label for="last-name">Last Name</label>
-            <input type="text" name="last-name" id="last-name" required />
+            <input
+              value="<%=sessionData['last-name']%>"
+              type="text"
+              name="last-name"
+              id="last-name"
+              required
+            />
           </p>
           <p>
             <label for="email">Email</label>
-            <input type="email" name="email" id="email" required />
+            <input
+              value="<%=sessionData['email']%>"
+              type="email"
+              name="email"
+              id="email"
+              required
+            />
           </p>
           <p>
             <label for="password">Password</label>
@@ -35,6 +59,7 @@
               id="password"
               required
               minlength="6"
+              value="<%=sessionData['password']%>"
             />
           </p>
           <p>
@@ -45,6 +70,7 @@
               id="confirm-password"
               required
               minlength="6"
+              value="<%=sessionData['confirm-password']%>"
             />
           </p>
         </section>
@@ -52,23 +78,53 @@
         <section>
           <p>
             <label for="house">House No.</label>
-            <input type="text" name="house" id="house" required />
+            <input
+              value="<%=sessionData['house']%>"
+              type="text"
+              name="house"
+              id="house"
+              required
+            />
           </p>
           <p>
             <label for="street">Street</label>
-            <input type="text" name="street" id="street" required />
+            <input
+              value="<%=sessionData['street']%>"
+              type="text"
+              name="street"
+              id="street"
+              required
+            />
           </p>
           <p>
             <label for="postal">Postal Code</label>
-            <input type="text" name="postal" id="postal" required />
+            <input
+              value="<%=sessionData['postal']%>"
+              type="text"
+              name="postal"
+              id="postal"
+              required
+            />
           </p>
           <p>
             <label for="city">City</label>
-            <input type="text" name="city" id="city" required />
+            <input
+              value="<%=sessionData['city']%>"
+              type="text"
+              name="city"
+              id="city"
+              required
+            />
           </p>
           <p>
             <label for="country">Country</label>
-            <input type="text" name="country" id="country" required />
+            <input
+              value="<%=sessionData['country']%>"
+              type="text"
+              name="country"
+              id="country"
+              required
+            />
           </p>
         </section>
         <div id="actions">

@@ -10,4 +10,8 @@ router.post("/signup", authController.trySignup);
 
 router.get("/login", authController.getLogin);
 
+router.post("/login", authController.tryLogin);
+
+router.post("/logout", authController.logout);
+
 module.exports = router;

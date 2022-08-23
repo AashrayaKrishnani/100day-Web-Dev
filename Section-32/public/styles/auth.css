@@ -20,3 +20,15 @@ form a:hover,
 form a:active {
   color: var(--color-primary-400);
 }
+
+#flash-error {
+  background-color: var(--color-error-500);
+  color: var(--color-primary-500-contrast);
+  border-radius: var(--border-radius-small);
+}
+
+#flash-error p {
+  font-weight: 500;
+  font-size: 1rem;
+  padding: var(--space-4) 0;
+}
